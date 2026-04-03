@@ -1,0 +1,25 @@
+---
+- name: Deploy Grafana
+  hosts: all
+  become: true
+  vars:
+    project_root: "/opt/grafana"
+
+  tasks:
+    - name: Ensure project directory exists
+      ansible.builtin.file:
+        path: "{{ project_root }}"
+        state: directory
+        mode: "0755"
+
+    - name: Render Grafana Docker Compose file
+      ansible.builtin.template:
+        src: ../roles/grafana/templates/compose.yml.j2
+        dest: "{{ project_root }}/compose.yml"
+        mode: "0644"
+
+    - name: Run Grafana container
+      community.docker.docker_compose_v2:
+        project_src: "{{ project_root }}"
+        state: present
+        wait: true

@@ -1,0 +1,25 @@
+---
+- name: Deploy Home Server
+  hosts: all
+  become: true
+  vars:
+    project_root: "/opt/home-server"
+
+  tasks:
+    - name: Ensure project directory exists
+      ansible.builtin.file:
+        path: "{{ project_root }}"
+        state: directory
+        mode: "0755"
+
+- name: Setup Firewall
+  import_playbook: playbooks/setup_firewall.yml
+
+- name: Install Docker
+  import_playbook: playbooks/install_docker.yml
+
+- name: Deploy Traefik
+  import_playbook: playbooks/deploy_traefik.yml
+
+- name: Deploy Grafana
+  import_playbook: playbooks/deploy_grafana.yml

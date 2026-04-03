@@ -1,0 +1,40 @@
+---
+- name: Configure UFW Firewall
+  hosts: all
+  become: true
+  tasks:
+    - name: Get latest Cloudflare IPv4 list
+      ansible.builtin.uri:
+        url: https://www.cloudflare.com/ips-v4
+        return_content: true
+      register: cloudflare_ipv4
+
+    - name: Get latest Cloudflare IPv6 list
+      ansible.builtin.uri:
+        url: https://www.cloudflare.com/ips-v6
+        return_content: true
+      register: cloudflare_ipv6
+
+    - name: Reset UFW and set defaults
+      community.general.ufw:
+        state: reset
+        default: deny
+        direction: incoming
+
+    - name: Allow full access from Local Network
+      community.general.ufw:
+        rule: allow
+        src: 192.168.0.0/24
+
+    - name: Allow HTTPS (443) from Cloudflare IPs
+      community.general.ufw:
+        rule: allow
+        port: "443"
+        proto: tcp
+        src: "{{ item }}"
+      # Split the response content by newline to get individual CIDR ranges
+      loop: "{{ (cloudflare_ipv4.content.split('\n') + cloudflare_ipv6.content.split('\n')) | select('search', '/') | list }}"
+
+    - name: Enable UFW
+      community.general.ufw:
+        state: enabled

@@ -1,0 +1,22 @@
+services:
+    traefik:
+        container_name: traefik
+        image: traefik:v3.6
+        restart: always
+        ports:
+            - "443:443"
+        volumes:
+            - "/var/run/docker.sock:/var/run/docker.sock:ro"
+        command:
+            # Entrypoints
+            - "--entrypoints.websecure.address=:443"
+
+            # Trust Cloudflare IPs
+            - "--entrypoints.websecure.forwardedHeaders.trustedIPs={{ cf_ips.content | replace('\n', ',') }}"
+
+            # Docker Provider Settings
+            - "--providers.docker=true"
+            - "--providers.docker.exposedbydefault=false"
+
+            # Global Middleware: Cloudflare Only Filter
+            - "--providers.docker.constraints=Label(`traefik.http.middlewares.cf-only.ipallowlist.sourcerange`, `{{ cf_ips.content | replace('\n', ',') }}`)"

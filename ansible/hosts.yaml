@@ -1,0 +1,6 @@
+---
+all:
+  hosts:
+    home_server:
+      ansible_host: "{{ server_ip }}"
+      ansible_user: "{{ server_user }}"
