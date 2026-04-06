@@ -4,3 +4,4 @@ all:
     home_server:
       ansible_host: "{{ server_ip }}"
       ansible_user: "{{ server_user }}"
+      ansible_port: 2222

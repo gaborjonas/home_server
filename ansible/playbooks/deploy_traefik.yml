@@ -10,22 +10,23 @@
         state: directory
         mode: "0755"
       loop:
-        - /opt/traefik
-
-    - name: Fetch latest Cloudflare IPv4 list
-      ansible.builtin.uri:
-        url: https://www.cloudflare.com/ips-v4
-        return_content: true
-      register: cf_ips
+        - "{{ apps_root }}/traefik"
 
     - name: Render Traefik Docker Compose file
       ansible.builtin.template:
         src: "{{ playbook_dir }}/../templates/traefik_compose.yml.j2"
-        dest: /opt/traefik/compose.yml
+        dest: "{{ apps_root}}/traefik/compose.yml"
         mode: "0644"
+
+    - name: Remove existing traefik container
+      community.docker.docker_container:
+        name: traefik
+        state: absent
+        force_kill: true
+      ignore_errors: true
 
     - name: Run Traefik container
       community.docker.docker_compose_v2:
-        project_src: /opt/traefik
+        project_src: "{{ apps_root }}/traefik"
         state: present
         recreate: always

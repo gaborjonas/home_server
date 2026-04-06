@@ -1,2 +1,5 @@
 server_ip:
 server_user:
+apps_root:
+cf_tunnel_token:
+website_name:

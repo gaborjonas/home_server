@@ -1,0 +1,22 @@
+---
+- name: Configure Docker Network
+  hosts: all
+  become: true
+  tasks:
+    - name: Create tunnel network
+      community.docker.docker_network:
+        name: cf_tunnel
+        driver: bridge
+        state: present
+
+    - name: Create proxy network
+      community.docker.docker_network:
+        name: proxy
+        driver: bridge
+        state: present
+
+    - name: Create apps network
+      community.docker.docker_network:
+        name: apps
+        driver: bridge
+        state: present

@@ -2,13 +2,11 @@
 - name: Deploy Home Server
   hosts: all
   become: true
-  vars:
-    project_root: "/opt/home-server"
 
   tasks:
     - name: Ensure project directory exists
       ansible.builtin.file:
-        path: "{{ project_root }}"
+        path: "{{ apps_root }}"
         state: directory
         mode: "0755"
 
@@ -18,8 +16,14 @@
 - name: Install Docker
   import_playbook: playbooks/install_docker.yml
 
+- name: Set up Docker Networks
+  import_playbook: playbooks/setup_docker_networks.yml
+
+- name: Deploy Coudfare Tunnel
+  import_playbook: playbooks/deploy_coludfared.yml
+
 - name: Deploy Traefik
   import_playbook: playbooks/deploy_traefik.yml
 
-- name: Deploy Grafana
-  import_playbook: playbooks/deploy_grafana.yml
+- name: Deploy Apps
+  import_playbook: playbooks/deploy_apps.yml

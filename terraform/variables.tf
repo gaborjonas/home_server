@@ -1,14 +1,10 @@
-variable "cloudflare_api_token" {
-  type      = string
-  sensitive = true
-}
-
-variable "zone_id" {
-  type = string
-}
-
-variable "server_ip" {
-  type        = string
-  sensitive   = true
-  description = "Server IP address"
+variable "cloudflare_account_id" { type = string }
+variable "cloudflare_zone_id" { type = string }
+variable "domain_name" { type = string }
+variable "cloudflare_api_token" { type = string }
+variable "tunnel_service_url" { type = string }
+variable "apps" {
+  type = map(object({
+    subdomain = string
+  }))
 }
