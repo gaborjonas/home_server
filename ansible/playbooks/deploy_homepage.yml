@@ -1,21 +1,21 @@
 ---
-- name: Deploy Apps
+- name: Deploy Homepage
   hosts: all
   become: true
 
   tasks:
-    - name: Create Apps directory
+    - name: Create Homepage directory
       ansible.builtin.file:
         path: "{{ item }}"
         state: directory
         mode: "0755"
       loop:
-        - "{{ apps_root }}/apps"
+        - "{{ apps_root }}/homepage"
 
     - name: Render homepage Compose file
       ansible.builtin.template:
-        src: "{{ playbook_dir }}/../templates/website_compose.yml.j2"
-        dest: "{{ apps_root}}/apps/compose.yml"
+        src: "{{ playbook_dir }}/../templates/homepage_compose.yml.j2"
+        dest: "{{ apps_root}}/homepage/compose.yml"
         mode: "0644"
 
     - name: Remove existing homepage container
@@ -27,6 +27,6 @@
 
     - name: Run homepage container
       community.docker.docker_compose_v2:
-        project_src: "{{ apps_root }}/apps"
+        project_src: "{{ apps_root }}/homepage"
         state: present
         recreate: always
