@@ -1,0 +1,18 @@
+services:
+  homepage:
+    image: nginx:alpine
+    container_name: homepage
+    networks:
+      - proxy
+      - apps
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.home.rule=Host(`{{ website_name }}`)"
+      - "traefik.http.services.home.loadbalancer.server.port=80"
+      - "traefik.docker.network=proxy"
+
+networks:
+  proxy:
+    external: true
+  apps:
+    external: true

@@ -1,0 +1,10 @@
+---
+- name: Setup Home Server
+  hosts: all
+  become: true
+  roles:
+    - common
+    - docker_core
+    - app_cf_tunnel
+    - app_traefik
+    - app_homepage

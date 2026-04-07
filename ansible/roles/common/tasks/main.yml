@@ -1,0 +1,14 @@
+- name: Reset UFW and set defaults
+  community.general.ufw:
+    state: reset
+    default: deny
+    direction: incoming
+
+- name: Allow full access from Local Network
+  community.general.ufw:
+    rule: allow
+    src: 192.168.0.0/24
+
+- name: Enable UFW
+  community.general.ufw:
+    state: enabled
