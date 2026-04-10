@@ -15,7 +15,7 @@
     name: cloudflared
     state: absent
     force_kill: true
-  ignore_errors: true
+  failed_when: false
 
 - name: Run Cloudfared container
   community.docker.docker_compose_v2:
