@@ -7,7 +7,7 @@
 - name: Render Traefik Docker Compose file
   ansible.builtin.template:
     src: "compose.yml.j2"
-    dest: "{{ apps_root}}/traefik/compose.yml.j2"
+    dest: "{{ apps_root }}/traefik/compose.yml"
     mode: "0644"
 
 - name: Remove existing traefik container
