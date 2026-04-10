@@ -1,0 +1,19 @@
+---
+# Ansible-lint configuration
+# Reference: https://ansible.readthedocs.io/projects/lint/configuring/
+
+profile: production
+
+# Skip specific rules
+skip_list:
+  - galaxy-info-version
+
+# Rules to exclude
+exclude_paths:
+  - .git
+  - .github
+  - roles/*/tests
+  - .vault_pass
+
+# Verbosity
+verbosity: 1

@@ -9,7 +9,7 @@
 - name: Render homepage Compose file
   ansible.builtin.template:
     src: "compose.yml.j2"
-    dest: "{{ apps_root }}/homepage/compose.yml.j2"
+    dest: "{{ apps_root }}/homepage/compose.yml"
     mode: "0644"
 
 - name: Remove existing homepage container
@@ -24,4 +24,3 @@
     project_src: "{{ apps_root }}/homepage"
     state: present
     recreate: always
-    

@@ -55,4 +55,4 @@
     name: "{{ item.name }}"
     driver: bridge
     state: present
-  loop: "{{ docker_networks }}"
+  loop: "{{ docker_core_networks }}"

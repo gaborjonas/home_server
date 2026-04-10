@@ -4,7 +4,7 @@ services:
     container_name: homepage
     networks:
       - proxy
-      - apps
+      - homepage
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.home.rule=Host(`{{ website_name }}`)"
@@ -14,5 +14,5 @@ services:
 networks:
   proxy:
     external: true
-  apps:
+  homepage:
     external: true
