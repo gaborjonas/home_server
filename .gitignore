@@ -3,8 +3,9 @@
 # Terraform
 terraform/.terraform/
 terraform/*.tfstate
-terraform/*.tfstate.backup
+terraform/*.tfstate.*
 terraform/*.tfvars
+terraform/*.auto.tfvars.local
 
 # Ansible
 ansible/group_vars/all.yml
