@@ -17,7 +17,7 @@ variable "domain_name" {
 
 variable "cloudflare_api_token" {
   type        = string
-  description = "Cloudflare API token with Zero Trust Tunnel permissions"
+  description = "Cloudflare API token"
   sensitive   = true
 }
 

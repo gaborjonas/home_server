@@ -1,23 +1,14 @@
 - name: Create Homepage directory
   ansible.builtin.file:
-    path: "{{ item }}"
+    path: "{{ apps_root }}/homepage"
     state: directory
     mode: "0755"
-  loop:
-    - "{{ apps_root }}/homepage"
 
 - name: Render homepage Compose file
   ansible.builtin.template:
     src: "compose.yml.j2"
     dest: "{{ apps_root }}/homepage/compose.yml"
     mode: "0644"
-
-- name: Remove existing homepage container
-  community.docker.docker_container:
-    name: homepage
-    state: absent
-    force_kill: true
-  failed_when: false
 
 - name: Run homepage container
   community.docker.docker_compose_v2:

@@ -1,3 +1,17 @@
+- name: Create HDD mount point
+  ansible.builtin.file:
+    path: /mnt/hdd
+    state: directory
+    mode: "0755"
+
+- name: Mount HDD
+  ansible.posix.mount:
+    path: /mnt/hdd
+    src: /dev/sdb1
+    fstype: ext4
+    opts: defaults
+    state: mounted
+
 - name: Reset UFW and set defaults
   community.general.ufw:
     state: reset

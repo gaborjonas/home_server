@@ -1,0 +1,23 @@
+---
+- name: Create media directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0755"
+  loop:
+    - "{{ apps_root }}/media"
+    - "{{ media_mount_root }}/downloads"
+    - "{{ media_mount_root }}/Movies"
+    - "{{ media_mount_root }}/Series"
+
+- name: Render media Docker Compose file
+  ansible.builtin.template:
+    src: "compose.yml.j2"
+    dest: "{{ apps_root }}/media/compose.yml"
+    mode: "0644"
+
+- name: Run media containers
+  community.docker.docker_compose_v2:
+    project_src: "{{ apps_root }}/media"
+    state: present
+    recreate: always

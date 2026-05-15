@@ -1,24 +1,17 @@
-- name: Create Cloudfare tunnel directory
+- name: Create Cloudflared tunnel directory
   ansible.builtin.file:
-    path: "{{ apps_root }}/cloudfared"
+    path: "{{ apps_root }}/cloudflared"
     state: directory
     mode: "0755"
 
-- name: Render Cloudfared Docker Compose file
+- name: Render Cloudflared Docker Compose file
   ansible.builtin.template:
     src: "compose.yml.j2"
-    dest: "{{ apps_root }}/cloudfared/compose.yml"
+    dest: "{{ apps_root }}/cloudflared/compose.yml"
     mode: "0644"
 
-- name: Remove existing cloudflared container
-  community.docker.docker_container:
-    name: cloudflared
-    state: absent
-    force_kill: true
-  failed_when: false
-
-- name: Run Cloudfared container
+- name: Run Cloudflared container
   community.docker.docker_compose_v2:
-    project_src: "{{ apps_root }}/cloudfared"
+    project_src: "{{ apps_root }}/cloudflared"
     state: present
     recreate: always

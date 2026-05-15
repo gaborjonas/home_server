@@ -10,13 +10,6 @@
     dest: "{{ apps_root }}/traefik/compose.yml"
     mode: "0644"
 
-- name: Remove existing traefik container
-  community.docker.docker_container:
-    name: traefik
-    state: absent
-    force_kill: true
-  failed_when: false
-
 - name: Run Traefik container
   community.docker.docker_compose_v2:
     project_src: "{{ apps_root }}/traefik"

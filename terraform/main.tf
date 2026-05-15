@@ -2,7 +2,7 @@ resource "random_password" "tunnel_secret" {
   length = 32
 }
 
-# 1. Create the Tunnel
+# Create the Tunnel
 resource "cloudflare_zero_trust_tunnel_cloudflared" "docker_tunnel" {
   account_id    = var.cloudflare_account_id
   name          = "docker_traefik_tunnel"
@@ -10,7 +10,7 @@ resource "cloudflare_zero_trust_tunnel_cloudflared" "docker_tunnel" {
   config_src    = "cloudflare"
 }
 
-# 2. Create DNS Records
+# Create DNS Records
 resource "cloudflare_dns_record" "app_records" {
   for_each = var.apps
 
@@ -22,7 +22,7 @@ resource "cloudflare_dns_record" "app_records" {
   ttl     = 1
 }
 
-# 3. Configure the Tunnel Ingress
+# Configure the Tunnel Ingress
 resource "cloudflare_zero_trust_tunnel_cloudflared_config" "tunnel_config" {
   account_id = var.cloudflare_account_id
   tunnel_id  = cloudflare_zero_trust_tunnel_cloudflared.docker_tunnel.id
@@ -40,7 +40,7 @@ resource "cloudflare_zero_trust_tunnel_cloudflared_config" "tunnel_config" {
   }
 }
 
-# 4. Fetch the Token (Required in v5)
+# Fetch the Token
 data "cloudflare_zero_trust_tunnel_cloudflared_token" "token" {
   account_id = var.cloudflare_account_id
   tunnel_id  = cloudflare_zero_trust_tunnel_cloudflared.docker_tunnel.id
