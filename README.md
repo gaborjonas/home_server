@@ -17,4 +17,6 @@
 	- Sonarr
 	- Radarr
 	- Plex
+	- Uptime Kuma (uptime checks & alerts)
+	- Dozzle (container log viewer)
 

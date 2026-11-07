@@ -9,3 +9,4 @@
     - app_traefik
     - app_homepage
     - app_media
+    - app_monitoring

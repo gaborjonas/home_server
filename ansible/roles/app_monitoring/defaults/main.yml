@@ -1,0 +1,10 @@
+---
+# Host IP the web UIs are published on. Docker-published ports bypass UFW,
+# so bind to the LAN address rather than 0.0.0.0 to keep them off other interfaces.
+app_monitoring_bind_ip: "{{ server_ip }}"
+
+app_monitoring_uptime_kuma_image: louislam/uptime-kuma:2
+app_monitoring_uptime_kuma_port: 3001
+
+app_monitoring_dozzle_image: amir20/dozzle:v8.12.0
+app_monitoring_dozzle_port: 8888

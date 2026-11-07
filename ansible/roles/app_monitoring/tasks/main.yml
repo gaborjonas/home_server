@@ -1,0 +1,21 @@
+---
+- name: Create monitoring directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0755"
+  loop:
+    - "{{ apps_root }}/monitoring"
+    - "{{ apps_root }}/monitoring/uptime-kuma"
+
+- name: Render monitoring Docker Compose file
+  ansible.builtin.template:
+    src: "compose.yml.j2"
+    dest: "{{ apps_root }}/monitoring/compose.yml"
+    mode: "0644"
+
+- name: Run monitoring containers
+  community.docker.docker_compose_v2:
+    project_src: "{{ apps_root }}/monitoring"
+    state: present
+    recreate: always

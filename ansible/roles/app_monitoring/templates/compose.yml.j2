@@ -1,0 +1,24 @@
+services:
+  uptime-kuma:
+    image: {{ app_monitoring_uptime_kuma_image }}
+    container_name: uptime-kuma
+    restart: unless-stopped
+    environment:
+      - TZ=Europe/London
+    volumes:
+      - ./uptime-kuma:/app/data
+      # Read-only socket enables "Docker Container" monitors
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports:
+      - "{{ app_monitoring_bind_ip }}:{{ app_monitoring_uptime_kuma_port }}:3001"
+
+  dozzle:
+    image: {{ app_monitoring_dozzle_image }}
+    container_name: dozzle
+    restart: unless-stopped
+    environment:
+      - DOZZLE_NO_ANALYTICS=true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports:
+      - "{{ app_monitoring_bind_ip }}:{{ app_monitoring_dozzle_port }}:8080"
