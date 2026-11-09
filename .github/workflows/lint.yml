@@ -45,12 +45,15 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install ansible-lint
-        run: pip install ansible ansible-lint
+      - name: Install ansible-lint and yamllint
+        run: pip install ansible ansible-lint yamllint
+
+      - name: yamllint
+        run: yamllint .
 
       - name: ansible-lint
         working-directory: ansible
-        run: ansible-lint --exclude deploy.yml
+        run: ansible-lint --exclude playbooks/deploy.yml
 
   secrets:
     runs-on: ubuntu-latest

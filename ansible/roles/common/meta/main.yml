@@ -1,0 +1,8 @@
+---
+galaxy_info:
+  platforms:
+    - name: Ubuntu
+      versions:
+        - all
+
+dependencies: []

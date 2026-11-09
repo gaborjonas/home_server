@@ -1,0 +1,4 @@
+---
+traefik_image: traefik
+traefik_image_tag: v3.6
+traefik_web_port: 80

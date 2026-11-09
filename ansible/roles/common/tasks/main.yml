@@ -1,27 +1,47 @@
+---
 - name: Create HDD mount point
   ansible.builtin.file:
-    path: /mnt/hdd
+    path: "{{ media_mount_root }}"
     state: directory
     mode: "0755"
 
 - name: Mount HDD
   ansible.posix.mount:
-    path: /mnt/hdd
+    path: "{{ media_mount_root }}"
     src: /dev/sdb1
     fstype: ext4
     opts: defaults
     state: mounted
 
-- name: Reset UFW and set defaults
+- name: Disable systemd-resolved stub listener (frees port 53 for AdGuard)
+  ansible.builtin.lineinfile:
+    path: /etc/systemd/resolved.conf
+    regexp: '^#?DNSStubListener='
+    line: "DNSStubListener=no"
+  notify: Restart systemd-resolved
+
+- name: Point /etc/resolv.conf at the real systemd-resolved file
+  ansible.builtin.file:
+    src: /run/systemd/resolve/resolv.conf
+    dest: /etc/resolv.conf
+    state: link
+    force: true
+
+- name: Allow SSH
   community.general.ufw:
-    state: reset
-    default: deny
-    direction: incoming
+    rule: allow
+    port: "{{ ssh_port }}"
+    proto: tcp
 
 - name: Allow full access from Local Network
   community.general.ufw:
     rule: allow
-    src: 192.168.0.0/24
+    src: "{{ lan_subnet }}"
+
+- name: Set UFW default policy to deny incoming
+  community.general.ufw:
+    default: deny
+    direction: incoming
 
 - name: Enable UFW
   community.general.ufw:

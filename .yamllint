@@ -1,0 +1,13 @@
+extends: default
+
+ignore: |
+  .git/
+  terraform/.terraform/
+  ansible/.ansible/
+  ansible/roles/*/vars/main.yml
+  ansible/inventory/group_vars/all/vault.yml
+
+rules:
+  line-length: disable
+  truthy:
+    check-keys: false

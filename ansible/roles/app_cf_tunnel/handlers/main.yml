@@ -1,0 +1,6 @@
+---
+- name: Restart Cloudflared container
+  community.docker.docker_compose_v2:
+    project_src: "{{ apps_root }}/cloudflared"
+    state: present
+    recreate: always

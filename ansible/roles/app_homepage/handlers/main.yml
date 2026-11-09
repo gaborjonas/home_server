@@ -1,0 +1,6 @@
+---
+- name: Restart Homepage container
+  community.docker.docker_compose_v2:
+    project_src: "{{ apps_root }}/homepage"
+    state: present
+    recreate: always

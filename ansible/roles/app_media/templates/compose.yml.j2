@@ -1,93 +1,123 @@
 services:
-  adguardhome:
-    image: adguard/adguardhome
-    container_name: adguardhome
-    ports:
-      - "53:53/tcp"
-      - "53:53/udp"
-      - "784:784/udp"
-      - "853:853/tcp"
-      - "3000:3000/tcp"
-      - "85:80/tcp"
-    volumes:
-      - ./adguard/work:/opt/adguardhome/work
-      - ./adguard/conf:/opt/adguardhome/conf
-    restart: unless-stopped
-
   prowlarr:
-    image: lscr.io/linuxserver/prowlarr:latest
+    image: "{{ prowlarr_image }}:{{ prowlarr_image_tag }}"
     container_name: prowlarr
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/London
+      - PUID={{ app_puid }}
+      - PGID={{ app_pgid }}
+      - TZ={{ app_tz }}
     volumes:
       - ./prowlarr:/config
     ports:
-      - "9696:9696"
+      - "{{ prowlarr_port }}:{{ prowlarr_port }}"
+    networks:
+      - proxy
     restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.prowlarr.rule=Host(`prowlarr.home`)"
+      - "traefik.http.routers.prowlarr.entrypoints=web"
+      - "traefik.http.services.prowlarr.loadbalancer.server.port={{ prowlarr_port }}"
 
   qbittorrent:
-    image: lscr.io/linuxserver/qbittorrent:latest
+    image: "{{ qbittorrent_image }}:{{ qbittorrent_image_tag }}"
     container_name: qbittorrent
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/London
-      - WEBUI_PORT=8080
-      - TORRENTING_PORT=6881
+      - PUID={{ app_puid }}
+      - PGID={{ app_pgid }}
+      - TZ={{ app_tz }}
+      - WEBUI_PORT={{ qbittorrent_webui_port }}
+      - TORRENTING_PORT={{ qbittorrent_torrent_port }}
     volumes:
       - ./qbittorrent:/config
       - {{ media_mount_root }}/downloads:/downloads
     ports:
-      - "8080:8080"
-      - "6881:6881"
-      - "6881:6881/udp"
+      - "{{ qbittorrent_webui_port }}:{{ qbittorrent_webui_port }}"
+      - "{{ qbittorrent_torrent_port }}:{{ qbittorrent_torrent_port }}"
+      - "{{ qbittorrent_torrent_port }}:{{ qbittorrent_torrent_port }}/udp"
+    networks:
+      - proxy
     restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.qbittorrent.rule=Host(`qbittorrent.home`)"
+      - "traefik.http.routers.qbittorrent.entrypoints=web"
+      - "traefik.http.services.qbittorrent.loadbalancer.server.port={{ qbittorrent_webui_port }}"
 
   sonarr:
-    image: lscr.io/linuxserver/sonarr:latest
+    image: "{{ sonarr_image }}:{{ sonarr_image_tag }}"
     container_name: sonarr
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/London
+      - PUID={{ app_puid }}
+      - PGID={{ app_pgid }}
+      - TZ={{ app_tz }}
     volumes:
       - ./sonarr:/config
       - {{ media_mount_root }}/Series:/tv/mount
       - {{ media_mount_root }}/downloads:/downloads
     ports:
-      - "8989:8989"
+      - "{{ sonarr_port }}:{{ sonarr_port }}"
+    networks:
+      - proxy
     restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.sonarr.rule=Host(`sonarr.home`)"
+      - "traefik.http.routers.sonarr.entrypoints=web"
+      - "traefik.http.services.sonarr.loadbalancer.server.port={{ sonarr_port }}"
 
   radarr:
-    image: lscr.io/linuxserver/radarr:latest
+    image: "{{ radarr_image }}:{{ radarr_image_tag }}"
     container_name: radarr
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/London
+      - PUID={{ app_puid }}
+      - PGID={{ app_pgid }}
+      - TZ={{ app_tz }}
     volumes:
       - ./radarr:/config
       - {{ media_mount_root }}/Movies:/movies/mount
       - {{ media_mount_root }}/downloads:/downloads
     ports:
-      - "7878:7878"
+      - "{{ radarr_port }}:{{ radarr_port }}"
+    networks:
+      - proxy
     restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.radarr.rule=Host(`radarr.home`)"
+      - "traefik.http.routers.radarr.entrypoints=web"
+      - "traefik.http.services.radarr.loadbalancer.server.port={{ radarr_port }}"
 
-  plex:
-    image: lscr.io/linuxserver/plex:latest
-    container_name: plex
-    network_mode: host
+  jellyfin:
+    image: "{{ jellyfin_image }}:{{ jellyfin_image_tag }}"
+    container_name: jellyfin
+    environment:
+      - PUID={{ app_puid }}
+      - PGID={{ app_pgid }}
+      - TZ={{ app_tz }}
     devices:
       - /dev/dri:/dev/dri
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/London
-      - VERSION=docker
+    group_add:
+      - "44"  # video
+      - "993" # render
     volumes:
-      - ./plex:/config
-      - {{ media_mount_root }}/Movies:/movies-mount
-      - {{ media_mount_root }}/Series:/tv-mount
+      - ./jellyfin:/config
+      - {{ media_mount_root }}/Series:/data/tvshows
+      - {{ media_mount_root }}/Movies:/data/movies-mount
+    ports:
+      - "{{ jellyfin_port }}:{{ jellyfin_port }}"
+      - "{{ jellyfin_https_port }}:{{ jellyfin_https_port }}"
+      - "{{ jellyfin_discovery_port }}:{{ jellyfin_discovery_port }}/udp"
+      - "{{ jellyfin_dlna_port }}:{{ jellyfin_dlna_port }}/udp"
+    networks:
+      - proxy
     restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jellyfin.rule=Host(`jellyfin.home`)"
+      - "traefik.http.routers.jellyfin.entrypoints=web"
+      - "traefik.http.services.jellyfin.loadbalancer.server.port={{ jellyfin_port }}"
+
+networks:
+  proxy:
+    external: true

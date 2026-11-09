@@ -1,3 +1,4 @@
+---
 - name: Create Homepage directory
   ansible.builtin.file:
     path: "{{ apps_root }}/homepage"
@@ -9,9 +10,9 @@
     src: "compose.yml.j2"
     dest: "{{ apps_root }}/homepage/compose.yml"
     mode: "0644"
+  notify: Restart Homepage container
 
-- name: Run homepage container
+- name: Ensure homepage container is running
   community.docker.docker_compose_v2:
     project_src: "{{ apps_root }}/homepage"
     state: present
-    recreate: always

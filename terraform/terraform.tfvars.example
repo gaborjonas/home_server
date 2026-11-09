@@ -1,0 +1,10 @@
+cloudflare_account_id = ""
+cloudflare_zone_id    = ""
+cloudflare_api_token  = ""
+domain_name           = "example.com"
+tunnel_service_url    = "http://traefik:80"
+
+apps = {
+  homepage = { subdomain = "@" }
+  adguard  = { subdomain = "adguard" }
+}

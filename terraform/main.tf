@@ -45,8 +45,3 @@ data "cloudflare_zero_trust_tunnel_cloudflared_token" "token" {
   account_id = var.cloudflare_account_id
   tunnel_id  = cloudflare_zero_trust_tunnel_cloudflared.docker_tunnel.id
 }
-
-output "tunnel_token" {
-  value     = data.cloudflare_zero_trust_tunnel_cloudflared_token.token.token
-  sensitive = true
-}

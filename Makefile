@@ -1,6 +1,6 @@
-.PHONY: lint lint-terraform lint-ansible lint-secrets
+.PHONY: lint lint-terraform lint-ansible lint-yaml lint-secrets
 
-lint: lint-terraform lint-ansible lint-secrets
+lint: lint-terraform lint-ansible lint-yaml lint-secrets
 
 lint-terraform:
 	cd terraform && terraform fmt -check -recursive
@@ -10,7 +10,10 @@ lint-terraform:
 	cd terraform && tflint
 
 lint-ansible:
-	cd ansible && ansible-lint --exclude deploy.yml
+	cd ansible && ansible-lint --exclude playbooks/deploy.yml
+
+lint-yaml:
+	yamllint .
 
 lint-secrets:
 	gitleaks detect --source . --no-banner --redact

@@ -1,3 +1,4 @@
+---
 - name: Create Cloudflared tunnel directory
   ansible.builtin.file:
     path: "{{ apps_root }}/cloudflared"
@@ -8,10 +9,12 @@
   ansible.builtin.template:
     src: "compose.yml.j2"
     dest: "{{ apps_root }}/cloudflared/compose.yml"
-    mode: "0644"
+    mode: "0600"
+  no_log: true
+  diff: false
+  notify: Restart Cloudflared container
 
-- name: Run Cloudflared container
+- name: Ensure Cloudflared container is running
   community.docker.docker_compose_v2:
     project_src: "{{ apps_root }}/cloudflared"
     state: present
-    recreate: always

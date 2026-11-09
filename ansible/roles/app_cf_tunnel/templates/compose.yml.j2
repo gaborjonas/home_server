@@ -1,6 +1,6 @@
 services:
   cloudflared:
-    image: cloudflare/cloudflared:2026.5.0
+    image: "{{ cf_tunnel_image }}:{{ cf_tunnel_image_tag }}"
     container_name: cloudflared
     restart: unless-stopped
     environment:
@@ -8,10 +8,7 @@ services:
     command: tunnel run
     networks:
       - cf_tunnel
-      - proxy
 
 networks:
-  proxy:
-    external: true
   cf_tunnel:
     external: true

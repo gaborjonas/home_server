@@ -8,4 +8,5 @@
     - app_cf_tunnel
     - app_traefik
     - app_homepage
+    - app_adguard
     - app_media

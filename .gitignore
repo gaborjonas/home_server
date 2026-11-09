@@ -9,7 +9,7 @@ terraform/*.tfvars
 terraform/*.auto.tfvars.local
 
 # Ansible
-ansible/group_vars/all.yml
+ansible/inventory/group_vars/all/vars.yml
 ansible/.ansible
 ansible/.vault_pass
 .ansible

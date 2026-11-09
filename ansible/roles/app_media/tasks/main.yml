@@ -15,9 +15,9 @@
     src: "compose.yml.j2"
     dest: "{{ apps_root }}/media/compose.yml"
     mode: "0644"
+  notify: Restart media containers
 
-- name: Run media containers
+- name: Ensure media containers are running
   community.docker.docker_compose_v2:
     project_src: "{{ apps_root }}/media"
     state: present
-    recreate: always

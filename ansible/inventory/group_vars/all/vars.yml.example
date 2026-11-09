@@ -1,0 +1,5 @@
+server_ip:
+server_user:
+apps_root:
+media_mount_root: /mnt/hdd
+ssh_port: 2222

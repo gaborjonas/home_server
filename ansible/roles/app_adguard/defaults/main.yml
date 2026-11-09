@@ -1,0 +1,7 @@
+---
+adguard_image: adguard/adguardhome
+adguard_image_tag: latest
+adguard_dns_port: 53
+adguard_dot_doq_port: 853
+adguard_setup_port: 3000
+adguard_web_port: 8082

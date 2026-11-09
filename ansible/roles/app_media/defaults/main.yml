@@ -1,2 +1,28 @@
 ---
-media_mount_root: /mnt/hdd
+app_puid: 1000
+app_pgid: 1000
+app_tz: Europe/London
+
+prowlarr_image: lscr.io/linuxserver/prowlarr
+prowlarr_image_tag: latest
+prowlarr_port: 9696
+
+qbittorrent_image: lscr.io/linuxserver/qbittorrent
+qbittorrent_image_tag: latest
+qbittorrent_webui_port: 8080
+qbittorrent_torrent_port: 6881
+
+sonarr_image: lscr.io/linuxserver/sonarr
+sonarr_image_tag: latest
+sonarr_port: 8989
+
+radarr_image: lscr.io/linuxserver/radarr
+radarr_image_tag: latest
+radarr_port: 7878
+
+jellyfin_image: lscr.io/linuxserver/jellyfin
+jellyfin_image_tag: latest
+jellyfin_port: 8096
+jellyfin_https_port: 8920
+jellyfin_discovery_port: 7359
+jellyfin_dlna_port: 1900

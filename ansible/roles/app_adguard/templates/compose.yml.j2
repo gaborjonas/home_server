@@ -1,0 +1,26 @@
+services:
+  adguardhome:
+    image: "{{ adguard_image }}:{{ adguard_image_tag }}"
+    container_name: adguardhome
+    ports:
+      - "{{ adguard_dns_port }}:53/tcp"
+      - "{{ adguard_dns_port }}:53/udp"
+      - "{{ adguard_dot_doq_port }}:853/tcp"
+      - "{{ adguard_dot_doq_port }}:853/udp"
+      - "{{ adguard_setup_port }}:3000/tcp"
+      - "{{ adguard_web_port }}:80/tcp"
+    volumes:
+      - ./work:/opt/adguardhome/work
+      - ./conf:/opt/adguardhome/conf
+    networks:
+      - proxy
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.adguard.rule=Host(`adguard.home`)"
+      - "traefik.http.routers.adguard.entrypoints=web"
+      - "traefik.http.services.adguard.loadbalancer.server.port=80"
+
+networks:
+  proxy:
+    external: true

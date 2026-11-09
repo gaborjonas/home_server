@@ -1,12 +1,16 @@
 services:
   traefik:
-    image: traefik:v3.6
+    image: "{{ traefik_image }}:{{ traefik_image_tag }}"
     container_name: traefik
     restart: unless-stopped
     command:
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
-      - "--entrypoints.web.address=:80"
+      - "--providers.docker.network=proxy"
+      - "--providers.file.directory=/etc/traefik/dynamic"
+      - "--providers.file.watch=true"
+      - "--entrypoints.web.address=:{{ traefik_web_port }}"
+      - "--api.dashboard=true"
 
       - "--tracing.otlp=true"
       - "--tracing.capturedRequestHeaders=CF-Ray,X-Real-Ip"
@@ -16,11 +20,21 @@ services:
 
       - "--accesslog=true"
       - "--accesslog.format=json"
+    ports:
+      - "{{ traefik_web_port }}:{{ traefik_web_port }}"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./dynamic:/etc/traefik/dynamic:ro
     networks:
       - cf_tunnel
       - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.home`)"
+      - "traefik.http.routers.traefik.entrypoints=web"
+      - "traefik.http.routers.traefik.service=api@internal"
 
 networks:
   proxy:
